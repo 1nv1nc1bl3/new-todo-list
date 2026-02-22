@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+
+* {
+    font-family: 'DM Sans', sans-serif;
+}
+
+@import 'tailwindcss';
+
+@theme {
+    --color-neon-pink: #ff6ec7;
+    --color-neon-blue: #00f5ff;
+    --color-neon-purple: #9d4edd;
+    --color-dark-bg: #0f172a;
+
+    --shadow-neon: 0 0 10px #9d4edd;
+    --shadow-neon-sm: 0 0 5px #9d4edd;
+}
