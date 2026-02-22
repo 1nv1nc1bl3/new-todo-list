@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react';
-// import Task from './Task';
+import Task from './Task';
 
 export default function Todo() {
     const [input, setInput] = useState('');
-    const [todos, setTodos] = useState([]);
+    const [todos, setTodos] = useState(() => {
+        // getting stored value
+        const saved = localStorage.getItem('todos list');
+        const initialValue = JSON.parse(saved);
+        return initialValue || [];
+    });
 
     const addNewTodo = () => {
         const newItem = {
@@ -15,22 +20,29 @@ export default function Todo() {
         setInput('');
     };
 
-    const toggleCompleted = (item) => {
-        const newItem = todos.map(item.id);
-        setTodos(newItem);
+    const toggleCompleted = (id) => {
+        setTodos((todos) =>
+            todos.map((todo) =>
+                todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+            ),
+        );
     };
 
-    const deleteTodo = (item) => {
-        const newArray = todos.filter((todo) => todo.id !== item.id);
+    const deleteTodo = (id) => {
+        const newArray = todos.filter((todo) => todo.id !== id);
         setTodos(newArray);
     };
 
+    let totalCount = todos?.length;
+    let completedCount = todos.filter((todo) => todo.completed).length;
+    let pendingCount = todos.length - completedCount;
+
     useEffect(() => {
-        console.log(todos);
+        localStorage.setItem('todos list', JSON.stringify(todos));
     }, [todos]);
 
     return (
-        <div className='bg-white dark:bg-dark-bg flex justify-center items-center min-h-screen p-5'>
+        <div className='bg-slate-100 dark:bg-dark-bg flex justify-center items-center min-h-screen p-5'>
             <div className='border shadow-teal-300 shadow-md max-w-2xl w-full p-6 rounded-lg dark:bg-gray-800 dark:text-gray-300'>
                 <h1 className='text-4xl font-mono font-extrabold py-3 bg-clip-text text-transparent bg-gradient-to-r from-neon-pink to-neon-blue'>
                     ✨ TODO-List
@@ -63,32 +75,13 @@ export default function Todo() {
                 {/* Task List */}
                 <div
                     id='taskList'
-                    className='my-6 grid grid-rows-auto grid-cols-4 items-center'
+                    className='my-6 grid grid-rows-auto grid-cols-3 items-center'
                 >
-                    {/* <Task
+                    <Task
                         todos={todos}
                         deleteTodo={deleteTodo}
                         toggleCompleted={toggleCompleted}
-                    /> */}
-                    {todos.map((todo) => {
-                        const { id, title, completed } = todo;
-                        return (
-                            <div key={id} className='flex items-center gap-2'>
-                                <input
-                                    type='checkbox'
-                                    className='peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-[#00f5ff] checked:border-[#00f5ff]'
-                                    onClick={() => toggleCompleted(id)}
-                                />
-                                <p>{title}</p>
-                                <button
-                                    className='cursor-pointer'
-                                    onClick={() => deleteTodo(todo)}
-                                >
-                                    ✖️
-                                </button>
-                            </div>
-                        );
-                    })}
+                    />
                 </div>
 
                 {/* Stats */}
@@ -99,7 +92,7 @@ export default function Todo() {
                                 id='pendingCount'
                                 className='text-2xl font-bold text-neon-pink'
                             >
-                                {todos.length}
+                                {pendingCount}
                             </div>
                             <div className='text-gray-500 dark:text-gray-400'>
                                 Pending
@@ -110,7 +103,7 @@ export default function Todo() {
                                 id='completedCount'
                                 className='text-2xl font-bold text-neon-blue'
                             >
-                                0
+                                {completedCount}
                             </div>
                             <div className='text-gray-500 dark:text-gray-400'>
                                 Completed
@@ -121,7 +114,7 @@ export default function Todo() {
                                 id='totalCount'
                                 className='text-2xl font-bold text-purple-400'
                             >
-                                {todos.length}
+                                {totalCount}
                             </div>
                             <div className='text-gray-500 dark:text-gray-400'>
                                 Total
