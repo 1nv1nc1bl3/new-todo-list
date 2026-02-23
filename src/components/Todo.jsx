@@ -1,53 +1,20 @@
-import { useEffect, useState } from 'react';
 import TaskList from './TaskList';
 import Statistics from './Statistics';
 import TodoForm from './TodoForm';
+import { useTodos } from '../hooks/useTodos';
 
 export default function Todo() {
-    const [input, setInput] = useState('');
-    const [todos, setTodos] = useState(() => {
-        const saved = localStorage.getItem('todos:v1');
-        let initialValue;
-        if (!saved) return [];
-        try {
-            initialValue = JSON.parse(saved);
-        } catch (error) {
-            console.error(error);
-            return [];
-        }
-        return initialValue || [];
-    });
-
-    const addNewTodo = () => {
-        const newItem = {
-            id: crypto.randomUUID(),
-            title: input,
-            completed: false,
-        };
-        setTodos([...todos, newItem]);
-        setInput('');
-    };
-
-    const toggleCompleted = (id) => {
-        setTodos((todos) =>
-            todos.map((todo) =>
-                todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-            ),
-        );
-    };
-
-    const deleteTodo = (id) => {
-        const newArray = todos.filter((todo) => todo.id !== id);
-        setTodos(newArray);
-    };
-
-    let totalCount = todos?.length;
-    let completedCount = todos.filter((todo) => todo.completed).length;
-    let pendingCount = todos.length - completedCount;
-
-    useEffect(() => {
-        localStorage.setItem('todos:v1', JSON.stringify(todos));
-    }, [todos]);
+    const {
+        todos,
+        input,
+        setInput,
+        addNewTodo,
+        deleteTodo,
+        toggleCompleted,
+        totalCount,
+        completedCount,
+        pendingCount,
+    } = useTodos();
 
     return (
         <div className='bg-slate-100 dark:bg-dark-bg flex justify-center items-center min-h-screen p-5'>
