@@ -18,7 +18,7 @@ export default function Todo() {
 
     return (
         <div className='bg-slate-100 dark:bg-dark-bg flex justify-center items-center min-h-screen p-5'>
-            <div className='border shadow-teal-300 shadow-md max-w-2xl w-full p-6 rounded-lg dark:bg-gray-800 dark:text-gray-300'>
+            <div className='border shadow-teal-300 shadow-md max-w-3xl w-full p-6 rounded-lg dark:bg-gray-800 dark:text-gray-300'>
                 <h1 className='text-4xl font-mono font-extrabold py-3 bg-clip-text text-transparent bg-gradient-to-r from-neon-pink to-neon-blue'>
                     ✨ TODO-List
                 </h1>
